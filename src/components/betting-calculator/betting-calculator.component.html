@@ -1,0 +1,35 @@
+
+<div class="bg-secondary-800 p-8 rounded-xl shadow-lg border border-secondary-700 max-w-md mx-auto">
+  <h2 class="font-poppins text-3xl font-bold text-primary-400 mb-8 text-center">Calculadora de Apostas</h2>
+  
+  <div class="space-y-6">
+    <div>
+      <label for="stake" class="block text-sm font-medium text-slate-400 mb-1">Valor a Apostar (MT)</label>
+      <input type="number" id="stake" [(ngModel)]="stake" name="stake" class="bg-secondary-700 text-slate-200 mt-1 block w-full rounded-lg border-secondary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-lg p-3">
+    </div>
+    <div>
+      <label for="odds" class="block text-sm font-medium text-slate-400 mb-1">Odd</label>
+      <input type="number" step="0.01" id="odds" [(ngModel)]="odds" name="odds" class="bg-secondary-700 text-slate-200 mt-1 block w-full rounded-lg border-secondary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-lg p-3">
+    </div>
+  </div>
+
+  @if (betResult(); as result) {
+    <div class="mt-8 pt-8 border-t border-secondary-700">
+      <h3 class="font-poppins text-xl font-semibold text-slate-200 text-center mb-6">Resultados Potenciais</h3>
+      <div class="space-y-4">
+        <div class="flex justify-between items-center bg-secondary-700/50 p-4 rounded-lg">
+          <span class="font-medium text-slate-300">Lucro Potencial:</span>
+          <span class="font-bold text-primary-400 text-xl">{{ result.potentialProfit.toFixed(2) }} MT</span>
+        </div>
+        <div class="flex justify-between items-center bg-secondary-700/50 p-4 rounded-lg">
+          <span class="font-medium text-slate-300">Retorno Total:</span>
+          <span class="font-bold text-slate-100 text-xl">{{ result.potentialReturn.toFixed(2) }} MT</span>
+        </div>
+        <div class="flex justify-between items-center bg-secondary-700/50 p-4 rounded-lg">
+          <span class="font-medium text-slate-300">Percentual de Lucro:</span>
+          <span class="font-bold text-accent-400 text-xl">{{ result.profitPercentage.toFixed(2) }}%</span>
+        </div>
+      </div>
+    </div>
+  }
+</div>

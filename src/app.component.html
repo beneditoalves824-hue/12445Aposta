@@ -1,0 +1,124 @@
+<div class="min-h-screen bg-secondary-900">
+  <header class="bg-secondary-800/80 shadow-lg sticky top-0 z-40 backdrop-blur-sm border-b border-secondary-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Top Header Row -->
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo and Title Section -->
+        <div class="flex items-center">
+          <div class="flex items-center space-x-3">
+             <!-- Sports Icons -->
+            <div class="hidden sm:flex items-center space-x-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="text-secondary-400" viewBox="0 0 256 256"><path d="M228.6,69.16a104.22,104.22,0,0,0-32.76-32.76L176,56l-11.43-34.28a104.5,104.5,0,0,0-73.14,0L80,56,60.16,36.4a104.22,104.22,0,0,0-32.76,32.76L47,80,12.72,91.43a104.5,104.5,0,0,0,0,73.14L47,176l-19.6,19.6a104.22,104.22,0,0,0,32.76,32.76L80,200l11.43,34.28a104.5,104.5,0,0,0,73.14,0L176,200l19.84,19.84a104.22,104.22,0,0,0,32.76-32.76L209,176l34.28-11.43a104.5,104.5,0,0,0,0-73.14L209,80ZM128,224a96,96,0,1,1,96-96A96.11,96.11,0,0,1,128,224Zm0-32a16,16,0,1,0-16-16A16,16,0,0,0,128,192Zm-48-24a16,16,0,1,0-16-16A16,16,0,0,0,80,168Zm32-48a16,16,0,1,0-16-16A16,16,0,0,0,112,120Zm48,48a16,16,0,1,0,16,16A16,16,0,0,0,160,168Zm16-64a16,16,0,1,0-16-16A16,16,0,0,0,176,104Zm-64-48a16,16,0,1,0-16-16A16,16,0,0,0,112,56Z"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="text-secondary-400" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm88-88c0,40.45-29.28,74.1-68.4,85.19a88,88,0,0,1,0-170.38C187.72,53.9,216,87.55,216,128ZM40,128c0-40.45,29.28-74.1,68.4-85.19a88,88,0,0,0,0,170.38C69.28,202.1,40,168.45,40,128ZM128,40c21,0,39.54,7.5,54.14,19.78C163.5,74.52,143.7,96,128,96s-35.5-21.48-54.14-36.22C88.46,47.5,107,40,128,40Zm0,176c-21,0-39.54-7.5-54.14-19.78C92.5,181.48,112.3,160,128,160s35.5,21.48,54.14,36.22C167.54,208.5,149,216,128,216Z"></path></svg>
+            </div>
+            <!-- Title -->
+            <h1 class="font-poppins text-xl sm:text-2xl font-bold text-slate-100 whitespace-nowrap">
+              Benedito <span class="text-primary-400">Digas de Apostas</span>
+            </h1>
+          </div>
+        </div>
+        <!-- Auth Section -->
+        <div class="flex items-center">
+          @if (isAuthenticated()) {
+            <div class="relative ml-3">
+              <div>
+                <button (click)="toggleUserMenu()" type="button" class="max-w-xs bg-secondary-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-secondary-800 focus:ring-primary-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                  <span class="sr-only">Abrir menu do utilizador</span>
+                  <img class="h-10 w-10 rounded-full object-cover" [src]="currentUser()?.picture" [alt]="'Foto de perfil de ' + currentUser()?.name">
+                </button>
+              </div>
+              @if (userMenuOpen()) {
+                <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-secondary-700 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                  <div class="px-4 py-3 border-b border-secondary-600">
+                    <p class="text-sm text-slate-200">Sessão iniciada como</p>
+                    <p class="text-sm font-medium text-white truncate">{{ currentUser()?.name }}</p>
+                  </div>
+                  <div class="py-1" role="none">
+                    <a (click)="openProfileModal()" href="#" class="text-slate-300 hover:bg-secondary-600 hover:text-white block px-4 py-2 text-sm" role="menuitem" tabindex="-1">Alterar Foto de Perfil</a>
+                    <a (click)="logout()" href="#" class="text-slate-300 hover:bg-secondary-600 hover:text-white block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-2">Sair</a>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+      
+      <!-- Navigation -->
+      @if (isAuthenticated()) {
+        <nav class="pt-3 border-t border-secondary-700">
+          <div class="overflow-x-auto pb-2">
+            <div class="flex justify-center space-x-1 sm:space-x-2">
+              @for (item of menuItems; track item.id) {
+                <button (click)="setView(item.id)" 
+                        [class]="activeView() === item.id ? 'bg-primary-500 text-white shadow-md' : 'text-slate-300 hover:bg-secondary-700 hover:text-white'"
+                        class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ease-in-out whitespace-nowrap">
+                  {{ item.label }}
+                </button>
+              }
+            </div>
+          </div>
+        </nav>
+      }
+    </div>
+  </header>
+
+  <main>
+    <div class="max-w-7xl mx-auto py-8 sm:px-6 lg:px-8">
+       @if (isAuthenticated()) {
+        @switch (activeView()) {
+          @case ('tracker') {
+            <bet-tracker />
+          }
+          @case ('compound') {
+            <compound-interest-calculator />
+          }
+          @case ('betting') {
+            <betting-calculator />
+          }
+          @case ('apa') {
+            <apa-section />
+          }
+          @case ('mentor') {
+            <ai-mentor />
+          }
+        }
+       } @else {
+         <auth-form />
+       }
+    </div>
+  </main>
+
+  <!-- Profile Picture Modal -->
+  @if (isProfileModalOpen()) {
+    <div @fade class="fixed inset-0 z-50 flex items-center justify-center bg-black/70" (keydown.escape)="closeProfileModal()">
+      <div class="bg-secondary-800 p-8 rounded-xl shadow-lg border border-secondary-700 w-full max-w-md m-4">
+        <h2 class="font-poppins text-2xl font-bold text-primary-400 mb-6 text-center">Alterar Foto de Perfil</h2>
+        
+        <div class="flex justify-center mb-6">
+          <img [src]="newProfilePictureUrl() || currentUser()?.picture" 
+               alt="Pré-visualização da foto de perfil"
+               class="h-32 w-32 rounded-full object-cover ring-4 ring-primary-500/50">
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label for="profilePictureUrl" class="block text-sm font-medium text-slate-400 mb-1">URL da Imagem</label>
+            <input type="text" id="profilePictureUrl" [(ngModel)]="newProfilePictureUrl" name="profilePictureUrl" 
+                   placeholder="Cole o URL da imagem aqui"
+                   class="bg-secondary-700 text-slate-200 mt-1 block w-full rounded-lg border-secondary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-lg p-3">
+          </div>
+        </div>
+
+        <div class="mt-8 flex justify-end space-x-4">
+          <button (click)="closeProfileModal()" class="px-6 py-2 rounded-lg text-sm font-semibold text-slate-300 bg-secondary-700 hover:bg-secondary-600 transition-colors">
+            Cancelar
+          </button>
+          <button (click)="saveProfilePicture()" class="px-6 py-2 rounded-lg text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 transition-colors">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
