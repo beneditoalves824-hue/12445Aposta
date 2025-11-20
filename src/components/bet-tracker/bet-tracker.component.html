@@ -37,6 +37,14 @@
     </div>
   </div>
 
+  <!-- Chart Section -->
+  @if (plan().length > 0) {
+    <div class="bg-secondary-800 p-6 rounded-xl shadow-lg border border-secondary-700">
+      <h2 class="font-poppins text-2xl font-bold text-primary-400 mb-4">Evolução da Banca</h2>
+      <div #chartContainer class="w-full h-[300px]"></div>
+    </div>
+  }
+
   <!-- Plan Section -->
   @if (plan().length > 0) {
     <div class="bg-secondary-800 p-6 rounded-xl shadow-lg border border-secondary-700">
@@ -48,29 +56,41 @@
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Data</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Valor Apostado</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Lucro Previsto</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Lucro Real</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Banca Final</th>
               <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">Ganho</th>
             </tr>
           </thead>
           <tbody class="bg-secondary-800 divide-y divide-secondary-700">
             @for (entry of plan(); track entry.date; let i = $index) {
-              <tr [class.bg-secondary-800/50]="entry.isLocked">
+              <tr [class.opacity-50]="entry.isLocked" class="transition-opacity">
                 <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-400">{{ entry.date }}</td>
-                <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-200 font-medium">{{ entry.stakedValue.toFixed(2) }} MT</td>
-                <td class="px-4 py-4 whitespace-nowrap text-sm text-primary-400 font-semibold">+{{ entry.predictedProfit.toFixed(2) }} MT</td>
-                <td class="px-4 py-4 whitespace-nowrap text-sm">
-                   <input type="number" step="0.01" [(ngModel)]="entry.actualProfit" 
-                          (input)="updateEntry(i)"
-                          [disabled]="entry.isLocked"
-                          class="bg-secondary-700 text-slate-200 block w-28 rounded-md border-secondary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm disabled:bg-secondary-600/50 disabled:cursor-not-allowed">
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-200 font-medium">
+                  @if (!entry.isLocked) {
+                    {{ entry.stakedValue.toFixed(2) }} MT
+                  } @else {
+                    —
+                  }
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-primary-400 font-semibold">
+                   @if (!entry.isLocked) {
+                    +{{ entry.predictedProfit.toFixed(2) }} MT
+                  } @else {
+                    —
+                  }
                 </td>
                 <td class="px-4 py-4 whitespace-nowrap text-sm font-bold" 
-                    [class]="(entry.actualProfit ?? 0) >= 0 ? 'text-slate-100' : 'text-red-500'">
-                  {{ entry.finalBankroll.toFixed(2) }} MT
+                    [class]="entry.finalBankroll >= entry.initialBankroll ? 'text-slate-100' : 'text-red-500'">
+                   @if (!entry.isLocked) {
+                    {{ entry.finalBankroll.toFixed(2) }} MT
+                  } @else {
+                    —
+                  }
                 </td>
                 <td class="px-4 py-4 whitespace-nowrap text-sm text-center">
-                  <input type="checkbox" [(ngModel)]="entry.isWin" [disabled]="entry.isLocked" class="h-5 w-5 rounded border-secondary-500 text-primary-600 focus:ring-primary-500 disabled:bg-secondary-600/50 disabled:cursor-not-allowed">
+                  <input type="checkbox" [(ngModel)]="entry.isWin" 
+                         (change)="updatePlanOnToggle(i)"
+                         [disabled]="entry.isLocked" 
+                         class="h-5 w-5 rounded border-secondary-500 text-primary-600 focus:ring-primary-500 disabled:bg-secondary-600/50 disabled:cursor-not-allowed">
                 </td>
               </tr>
             }

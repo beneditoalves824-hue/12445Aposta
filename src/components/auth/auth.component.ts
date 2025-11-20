@@ -28,17 +28,17 @@ export class AuthComponent {
     this.confirmPassword.set('');
   }
 
-  async onSubmit(): Promise<void> {
+  onSubmit(): void {
     this.isLoading.set(true);
     this.errorMessage.set(null);
     try {
       if (this.authMode() === 'login') {
-        await this.authService.login(this.username(), this.password(), this.rememberMe());
+        this.authService.login(this.username(), this.password(), this.rememberMe());
       } else {
         if (this.password() !== this.confirmPassword()) {
           throw new Error('As senhas não coincidem.');
         }
-        await this.authService.register(this.username(), this.password());
+        this.authService.register(this.username(), this.password());
       }
     } catch (err: any) {
       this.errorMessage.set(err.message || 'Ocorreu um erro desconhecido.');

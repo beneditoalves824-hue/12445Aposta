@@ -7,13 +7,21 @@ import { GoogleGenAI } from '@google/genai';
 })
 export class GeminiService {
   private genAI: GoogleGenAI;
+  // IMPORTANT: Replace this placeholder with your actual Gemini API Key.
+  private apiKey = 'YOUR_GEMINI_API_KEY';
 
   constructor() {
-    // This will use the API_KEY from the environment variables.
-    this.genAI = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    if (this.apiKey === 'YOUR_GEMINI_API_KEY') {
+      console.error("Gemini API Key is not set. Please replace the placeholder in src/services/gemini.service.ts");
+      // We avoid throwing an error here to let the app load, but the AI feature won't work.
+    }
+    this.genAI = new GoogleGenAI({ apiKey: this.apiKey });
   }
 
   async generateText(prompt: string): Promise<string> {
+    if (this.apiKey === 'YOUR_GEMINI_API_KEY') {
+      return 'O Mentor IA está desativado. Por favor, configure a chave da API do Gemini no código-fonte para ativar esta funcionalidade.';
+    }
     try {
       const response = await this.genAI.models.generateContent({
         model: 'gemini-2.5-flash',
